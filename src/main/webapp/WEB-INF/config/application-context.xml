@@ -2,7 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
     <context:annotation-config/>
     <context:component-scan base-package="project.dao"/>
     <context:component-scan base-package="project.service"/>
@@ -10,12 +11,21 @@
 
     <context:property-placeholder location="classpath:db.properties"/>
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${MySQL_DriverClassName}"/>
-        <property name="url" value="${MySQL_URL}"/>
-        <property name="username" value="${MySQL_Username}"/>
-        <property name="password" value="${MySQL_Pass}"/>
+    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+        <!--<property name="driverClassName" value="${MySQL_DriverClassName}"/>-->
+        <!--<property name="url" value="${MySQL_URL}"/>-->
+        <!--<property name="username" value="${MySQL_Username}"/>-->
+        <!--<property name="password" value="${MySQL_Pass}"/>-->
+    <!--</bean>-->
+
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="java:comp/env/jdbc/MyDB"/>
+        <property name="proxyInterface" value="javax.sql.DataSource"/>
     </bean>
+
+    <!--alternative-->
+    <jee:jndi-lookup jndi-name="jdbc/MyDB" id="jeeDataSource" expected-type="javax.sql.DataSource"/>
+    <!---->
 
     <bean id="adapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 

@@ -1,11 +1,14 @@
 package project.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "USER")
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = -2351242067818872786L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
